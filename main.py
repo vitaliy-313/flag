@@ -13,7 +13,7 @@ app.config['JWT_SECRET_KEY'] = 'super-secret'
 connect = sqlite3.connect('dbase.db', check_same_thread=False)
 cursor = connect.cursor()
 
-@app.route('/')
+@app.route('/', methods =['GET', 'POST'])
 def index():
     return render_template("index.html")
 
@@ -24,7 +24,7 @@ def login():
         login = request.form.get('login')
         passw = request.form.get('password')
         function.login(login, passw)
-        
+
     return render_template("login.html")
 
 @app.route('/reg', methods =['GET', 'POST'])
@@ -39,6 +39,9 @@ def reg():
     else:
         print('незарегистрирован')
     return render_template("reg.html")
+@app.route('/profile', methods =['GET', 'POST'])
+def profile():
+    return render_template("profile.html")
 
 if __name__ == '__main__':
     app.run()
