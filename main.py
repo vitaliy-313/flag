@@ -48,10 +48,12 @@ def reg():
 def profile():
     return render_template("profile.html")
 
-# @app.route('/logout', methods =['POST'])
-# def profile():
-#     session['user_id'] = None
-#     return redirect("index.html")
+@app.route('/logout', methods=['POST'])
+def logout():
+    session['user_id'] = None
+
+    return redirect("index.html")
+
 
 if __name__ == '__main__':
     app.run()
