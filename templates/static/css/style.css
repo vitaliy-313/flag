@@ -1,0 +1,71 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    margin: auto;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.links {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 20px;
+    text-align: start;
+}
+
+/* p {
+    margin: 0;
+} */
+
+.link {
+    height: 20px;
+    width: auto;
+}
+
+nav {
+    display: flex;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: whitesmoke;
+    text-shadow: 0.2em 0.1em 0.2em rgb(0, 0, 0);
+}
+
+.main {
+    width: 600px;
+    height: 300px;
+    background-color: rgb(27, 131, 169);
+    margin: auto;
+    padding: 30px;
+}
+
+.btn {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-short {
+    justify-content: center;
+}
+.buzova1{
+    position: absolute;
+left: 1030px;
+top: 75px;
+z-index: -1;
+width: 400px;
+}
+.buzova{
+    position: absolute;
+left: 35px;
+top: 56px;
+z-index: -1;
+width: 480px;
+}
