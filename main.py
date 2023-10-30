@@ -23,7 +23,8 @@ def login():
     if request.method == 'POST':
         login = request.form.get('login')
         passw = request.form.get('password')
-        user = function.login(login, passw)
+        function.login(login, passw)
+        
     return render_template("login.html")
 
 @app.route('/reg', methods =['GET', 'POST'])
@@ -37,7 +38,7 @@ def reg():
         print(session['user_id'])
     else:
         print('незарегистрирован')
-
     return render_template("reg.html")
+
 if __name__ == '__main__':
     app.run()

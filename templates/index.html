@@ -14,8 +14,15 @@
     <nav>
         <div class="navbar">
             <a href="/">Главная</a>
+
+            {% if session['user_id'] != none: %}
+            <a href="/profile">Профиль</a>
+            <button>Выйти</button>
+
+            {% else: %}
             <a href="/login">Войти</a>
             <a href="/reg">Зарегистрироваться</a>
+            {% endif %}
 
         </div>
     </nav>
