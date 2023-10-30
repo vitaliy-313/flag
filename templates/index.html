@@ -17,7 +17,7 @@
 
             {% if session['user_id'] != none: %}
             <a href="/profile">Профиль</a>
-            <button>Выйти</button>
+            <a href="/logout">Выйти</a>
 
             {% else: %}
             <a href="/login">Войти</a>
@@ -26,20 +26,20 @@
 
         </div>
     </nav>
-    <div class="main">
+    <div class="main" method="post">
         <h1>СОКРАТИТЕЛЬ</h1>
         <div class="links">
             <p>Полная ссылка</p>
             <p>Короткая ссылка</p>
             <input type="text" name="url" class="link" id="url">
 
-            <input type="text" name="short-url" class="link" id="short-url">
+            <input type="text" name="short_url" class="link" id="short-url">
         </div>
         <p>Тип доступа</p>
-        <select name="" id="">
-            <option value="">Публичный</option>
-            <option value="">Общего доступа</option>
-            <option value="">Приватный</option>
+        <select name="access" id="">
+            <option value="access_public">Публичный</option>
+            <option value="access_all">Общего доступа</option>
+            <option value="access_privat">Приватный</option>
         </select>
         <div class="btn">
             <button class="btn-short">Сократить</button>

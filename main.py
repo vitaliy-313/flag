@@ -15,6 +15,11 @@ cursor = connect.cursor()
 
 @app.route('/', methods =['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        url = request.form.get('url')
+        access = request.form.get('access')
+        short_url = request.form.get('short_url')
+        function.up(url, short_url, access)
     return render_template("index.html")
 
 @app.route('/login', methods =['GET', 'POST'])
@@ -42,6 +47,11 @@ def reg():
 @app.route('/profile', methods =['GET', 'POST'])
 def profile():
     return render_template("profile.html")
+
+# @app.route('/logout', methods =['POST'])
+# def profile():
+#     session['user_id'] = None
+#     return redirect("index.html")
 
 if __name__ == '__main__':
     app.run()

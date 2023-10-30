@@ -37,7 +37,14 @@ cursor = connect.cursor()
 # "level" INTEGER NOT NULL,
 # primary key("id" AUTOINCREMENT))''')
 # connect.commit()
-
+#
+# links_types = [(1, 'public'), (2, 'all'), (3, 'privat')]
+# acc = cursor.execute(''' SELECT * FROM accesses'''). fetchall()
+#
+# if (acc == []):
+#     for i in links_types:
+#         cursor.execute(''' INSERT INTO accesses('level') VALUES (?)''', (i[1], ))
+#         connect.commit()
 def login (login, password):
     res = cursor.execute("SELECT * FROM users where login = ? ",(login)).fetchone()
     if len(res) > 1 and check_password_hash(res[2],password):
@@ -66,8 +73,29 @@ def reg (login, password):
             return redirect('/profile', code=302)
 
 
-def getLink (link, short_link, access, login):
-
-    cursor.execute("INSERT INTO links (long, short, access_id, login) VALUES (?)(?)(?)(?)", (link, short_link, access, login))
-    connect.commit()
-    print('ссылка созана')
+def up(link, short_link, access):
+    name = cursor.execute('''SELECT * FROM 'links' WHERE hreflink = ? ''', (link,)).fetchone()
+    if (name != None):
+        if (name[3] == session['user_id']):
+            if (access != '0'):
+                cursor.execute('''UPDATE links SET link_type_id = ? WHERE id = ?''', (access, short_link))
+                connect.commit()
+                connect.close()
+                return redirect('/profile', code=302)
+            else:
+                connect.close()
+                return redirect('/profile', code=302)
+        else:
+            connect.close()
+            return redirect('/profile', code=302)
+    else:
+        if (access != '0'):
+            cursor.execute('''UPDATE links SET hreflink = ?, link_type_id = ? WHERE id = ?''', (link, access, request.form["idlink"]))
+            connect.commit()
+            connect.close()
+            return redirect('/profile', code=302)
+        else:
+            cursor.execute('''UPDATE links SET hreflink = ? WHERE id = ?''', (link, request.form["idlink"]))
+            connect.commit()
+            connect.close()
+            return redirect('/profile', code=302)
