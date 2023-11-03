@@ -20,7 +20,7 @@ def index():
         access = request.form.get('access')
         short_url = request.form.get('short_url')
         function.up(url, short_url, access)
-    return render_template("index.html")
+    return render_template("/")
 
 @app.route('/login', methods =['GET', 'POST'])
 def login():
@@ -34,13 +34,12 @@ def login():
 
 @app.route('/reg', methods =['GET', 'POST'])
 def reg():
-    session['user_id'] = ""
+    session['user_id'] = None
     if request.method == 'POST':
         login = request.form.get('login')
         passw = request.form.get('password')
-        print(login, passw)
         function.reg(login, passw)
-        print(session['user_id'])
+        return render_template("/")
     else:
         print('незарегистрирован')
     return render_template("reg.html")
@@ -48,11 +47,11 @@ def reg():
 def profile():
     return render_template("profile.html")
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session['user_id'] = None
-
-    return redirect("index.html")
+    print("123")
+    return redirect("/")
 
 
 if __name__ == '__main__':
