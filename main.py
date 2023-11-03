@@ -50,7 +50,6 @@ def profile():
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session['user_id'] = None
-    print("123")
     return redirect("/")
 
 
