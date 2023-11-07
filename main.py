@@ -20,7 +20,7 @@ def index():
         access = request.form.get('access')
         short_url = request.form.get('short_url')
         function.up(url, short_url, access)
-    return render_template("/")
+    return render_template("index.html")
 
 @app.route('/login', methods =['GET', 'POST'])
 def login():
@@ -50,6 +50,8 @@ def profile():
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session['user_id'] = None
+    session['all'] = None
+    print("123")
     return redirect("/")
 
 
