@@ -52,16 +52,16 @@ def searchUserUrl(url, owner_id):
     FROM links
     WHERE long = ? AND owner_id = ?''',(url, owner_id)).fetchall()
 def login (login, password):
-
     user = cursor.execute("SELECT * FROM users where login = ? ",(login, )).fetchone()
     hashpass = check_password_hash(user[2], password)
 
     if user != None:
-        if hashpass == user[2]:
+        if hashpass:
             session['user_id'] = user[0]
+
             if 'all' in session and session['all'] != None:
                 if session['type'] == 'all':
-                    er = session['all'][1]
+                    err = session['all'][1]
                     href = cursor.execute(
                     '''SELECT * FROM links INNER JOIN accesses ON accesses.id = links.accesses_id WHERE links.id = ?''',
                     (session['all'][0],)).fetchone()
@@ -70,10 +70,10 @@ def login (login, password):
                     session['all']=None
                     session['user_id'] = None
                     connect.close()
-                    return redirect(f"{er}")
+                    return redirect(f"{err}")
                 else:
                     if session['all'][3] == session['user_id']:
-                        er = session['all'][1]
+                        err = session['all'][1]
                         href = cursor.execute(
                         '''SELECT * FROM links INNER JOIN accesses ON accesses.id = links.accesses_id WHERE links.id = ?''',
                         (session['all'][0],)).fetchone()
@@ -83,7 +83,7 @@ def login (login, password):
                         session['user_id'] = None
                         connect.commit()
                         connect.close()
-                        return redirect(f"{er}")
+                        return redirect(f"{err}")
                     else:
                         session['user_id'] = None
                         session['all'] = None
@@ -103,7 +103,7 @@ def login (login, password):
 
 def reg (login, password):
     user_id = login
-    cursor.execute('''SELECT * FROM 'users' WHERE login = ?''', (user_id,)).fetchone()
+    cursor.execute('''SELECT * FROM users WHERE login = ?''', (user_id,)).fetchone()
     user_n = cursor.fetchone()
 
     if (login == '' or password == ''):
@@ -127,3 +127,10 @@ def upUrl(url, short_url, access_id, owner_id, count = 0):
         links (long, short, access_id, count, owner_id)
         VALUES (?,?,?,?,?)'''),(url, short_url, access_id, count, owner_id)
     connect.commit()
+
+def getUserUrl(owner):
+    cursor.execute('''
+    SELECT long, short, count
+    FROM links
+    WHERE owner = ?
+    ''',(owner,)).fetchall()

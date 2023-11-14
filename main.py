@@ -1,11 +1,10 @@
-import random
-
+import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+import flask
 from flask import Flask, render_template, request, session, redirect
 import os
+import hashlib, random
 import function
-import sqlite3, uuid, hashlib, random
-from werkzeug.security import generate_password_hash, check_password_hash
-
 from function import *
 
 app = Flask(__name__, template_folder='templates', static_folder='templates/static')
@@ -41,13 +40,12 @@ def index():
     return render_template("index.html")
 
 @app.route('/login', methods =['GET', 'POST'])
-def login():
+def log():
 
     if request.method == 'POST':
-        login = request.form.get('login')
+        loginUser = request.form.get('login')
         passw = request.form.get('password')
-        function.login(login, passw)
-
+        function.login(loginUser, passw)
     return render_template("login.html")
 
 @app.route('/reg', methods =['GET', 'POST'])
@@ -57,19 +55,16 @@ def reg():
         login = request.form.get('login')
         passw = request.form.get('password')
         function.reg(login, passw)
-        return render_template("/")
-    else:
-        print('незарегистрирован')
     return render_template("reg.html")
 @app.route('/profile', methods =['GET', 'POST'])
 def profile():
-    return render_template("profile.html")
+    userUrl = getUserUrl(session['user_id'])
+    return render_template("profile.html", userUrl=userUrl)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session['user_id'] = None
     session['all'] = None
-    print("123")
     return redirect("/")
 
 
