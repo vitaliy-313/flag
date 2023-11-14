@@ -1,8 +1,9 @@
+import random
+
 from flask import Flask, render_template, request, session, redirect
 import os
 import function
-# from flask_jwt_extended import create_access_token, JWTManger, get_jwt_identity, jwt_required
-# import sqlite3, uuid, hashlib, random
+import sqlite3, uuid, hashlib, random
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from function import *
@@ -16,10 +17,27 @@ cursor = connect.cursor()
 @app.route('/', methods =['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        err = ''
         url = request.form.get('url')
         access = request.form.get('access')
         short_url = request.form.get('short_url')
-        function.up(url, short_url, access)
+        if url != None:
+            if 'user_id' in session:
+                userUrl =  searchUserUrl(url, session['user_id'])
+                print(searchUserUrl(url, session['user_id']))
+                if len(userUrl) == 0:
+                    if short_url:
+                        upUrl(url,  short_url, access, session['user_id'])
+                    else:
+                        err = 'Ссылка уже используется'
+                else:
+                    userShortUrl = ''
+                    userShortUrl = hashlib.mb5(url.encode()).hexdigest()[:random.randint]
+                    upUrl(url,  userShortUrl, access, session['user_id'])
+            else:
+                err = 'Эта ссылка сокращалась вами'
+        else:
+            err = 'Войдите, чтоб сокраить ссылку'
     return render_template("index.html")
 
 @app.route('/login', methods =['GET', 'POST'])

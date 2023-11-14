@@ -45,6 +45,12 @@ cursor = connect.cursor()
 #     for i in links_types:
 #         cursor.execute(''' INSERT INTO accesses('level') VALUES (?)''', (i[1], ))
 #         connect.commit()
+
+def searchUserUrl(url, owner_id):
+    return cursor.execute('''
+    SELECT long
+    FROM links
+    WHERE long = ? AND owner_id = ?''',(url, owner_id)).fetchall()
 def login (login, password):
 
     user = cursor.execute("SELECT * FROM users where login = ? ",(login, )).fetchone()
@@ -116,29 +122,8 @@ def reg (login, password):
             return redirect('/profile', code=302)
 
 
-def up(link, short_link, access):
-    name = cursor.execute('''SELECT * FROM 'links' WHERE hreflink = ? ''', (link,)).fetchone()
-    if (name != None):
-        if (name[3] == session['user_id']):
-            if (access != '0'):
-                cursor.execute('''UPDATE links SET link_type_id = ? WHERE id = ?''', (access, short_link))
-                connect.commit()
-                connect.close()
-                return redirect('/profile', code=302)
-            else:
-                connect.close()
-                return redirect('/profile', code=302)
-        else:
-            connect.close()
-            return redirect('/profile', code=302)
-    else:
-        if (access != '0'):
-            cursor.execute('''UPDATE links SET hreflink = ?, link_type_id = ? WHERE id = ?''', (link, access, request.form["idlink"]))
-            connect.commit()
-            connect.close()
-            return redirect('/profile', code=302)
-        else:
-            cursor.execute('''UPDATE links SET hreflink = ? WHERE id = ?''', (link, request.form["idlink"]))
-            connect.commit()
-            connect.close()
-            return redirect('/profile', code=302)
+def upUrl(url, short_url, access_id, owner_id, count = 0):
+    cursor.execute('''INSERT INTO
+        links (long, short, access_id, count, owner_id)
+        VALUES (?,?,?,?,?)'''),(url, short_url, access_id, count, owner_id)
+    connect.commit()
