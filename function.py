@@ -60,24 +60,14 @@ def login (login, password):
     FROM users WHERE login = ? AND password =?''', (login,password)).fetchone()
 
 def reg (login, password):
-    user_id = login
-    cursor.execute('''SELECT * FROM users WHERE login = ?''', (user_id,)).fetchone()
-    user_n = cursor.fetchone()
-
-    if (login == '' or password == ''):
-        flask.flash('для регистрации заполните все поля')
-        return redirect('/reg', code=302)
+    if findUser(login) != None:
+        session['err']='выбранное имя занято'
+        return False
     else:
-        if user_n != None:
-            flask.flash('выбранное имя занято')
-            return redirect('/reg', code=302)
-        else:
-            hash = generate_password_hash(password)
-            cursor.execute('''INSERT INTO users('login', password) VALUES(?, ?)''', (login,hash))
-            connect.commit()
-            user = cursor.execute('''SELECT * FROM 'users' WHERE login = ?''', (login,)).fetchone()
-            session['user_id'] = user[0]
-            return redirect('/profile', code=302)
+        hash = generate_password_hash(password)
+        cursor.execute('''INSERT INTO users('login', password) VALUES(?, ?)''', (login,hash))
+        connect.commit()
+        return cursor.execute('''SELECT * FROM 'users' WHERE login = ?''', (login,)).fetchone()
 
 
 def upUrl(url, short_url, access_id, owner_id, count = 0):

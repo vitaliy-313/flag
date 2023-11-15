@@ -15,7 +15,7 @@ cursor = connect.cursor()
 
 @app.route('/', methods =['GET', 'POST'])
 def index():
-    print(session["auth"])
+
     if request.method == 'POST':
         err = ''
         url = request.form.get('url')
@@ -60,11 +60,15 @@ def log():
 
 @app.route('/reg', methods =['GET', 'POST'])
 def reg():
-    session['user_id'] = None
+    session['err'] = ''
     if request.method == 'POST':
         login = request.form.get('login')
         passw = request.form.get('password')
-        function.reg(login, passw)
+        user = function.reg(login, passw)
+        if user != False:
+            session['auth'] = True
+            session["user_id"] = user[0]
+            return redirect("/profile")
     return render_template("reg.html")
 @app.route('/profile', methods =['GET', 'POST'])
 def profile():
@@ -73,8 +77,7 @@ def profile():
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
-    session['user_id'] = None
-    session['all'] = None
+    session.clear()
     return redirect("/")
 
 

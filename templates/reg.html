@@ -25,10 +25,11 @@
     <form method="post" class="main">
         <h1>ЗАРЕГИСТРИРОВАТЬСЯ</h1>
         <p>Логин</p>
-        <input name="login" type="text">
+        <input required name="login" type="text">
         <p>Пароль</p>
-        <input name="password" type="password">
+        <input required name="password" type="password">
         <div class="btn">
+            <p>{{session['err']}}</p>
             <button class="">Зарегистрироваться</button>
         </div>
     </form>
