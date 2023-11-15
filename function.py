@@ -49,7 +49,7 @@ cursor = connect.cursor()
 #         connect.commit()
 
 def getAccess():
-    return cursor.execute('''SELECT level FROM accesses ''').fetchall()
+    return cursor.execute('''SELECT level, rus FROM accesses ''').fetchall()
 def searchUserUrl(url, owner_id):
     return cursor.execute('''
     SELECT long
