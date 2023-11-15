@@ -35,20 +35,16 @@
     </tr>
   </thead>
   <tbody>
-   {% for i in links %}
+   {% for i in userUrl %}
      <tr>
-      <td class="max-250px">{{i[0]}}</td>
+      <td class="max-250px">{{i[1]}}</td>
+      <td>{{i[2]}}</td>
       <td>{{i[3]}}</td>
-      <td>{{i[1]}}</td>
       <td>
          <form method="POST" action="edit_type">
            <select name="type">
              {% for t in types %}
-              {% if(t['id_type'] == i[5])%}
-                        <option selected value="{{t['id_type']}}">{{t['type']}}</option>
-                    {% else %}
-                 <option value="{{t['id_type']}}">{{t['type']}}</option>
-               {% endif %}
+                        <option selected value="{{t[0]}}">{{t[2]}}</option>
              {% endfor %}
            </select>
           <button name="id" value={{i[4]}}>Ред</button>

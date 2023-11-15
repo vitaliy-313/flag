@@ -32,9 +32,6 @@
         <input name="password" type="password">
         <div class="btn">
             <p>{{err}}</p>
-            {% for err in get_flashed_messages() %}
-            <p>{{err}}</p>
-            {% endfor %}
             <button class="">Войти</button>
         </div>
     </form>

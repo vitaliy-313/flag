@@ -70,9 +70,9 @@ def reg():
     return render_template("reg.html")
 @app.route('/profile', methods =['GET', 'POST'])
 def profile():
+    typeArr = getTypes()
     links = getUserUrl(session['user_id'])
-    print(links)
-    return render_template("profile.html", userUrl=links)
+    return render_template("profile.html", userUrl=links, types=Types(typeArr))
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():

@@ -86,3 +86,12 @@ def getUserUrl(owner):
     SELECT links.id, long, short, count, accesses.rus as type, access_id 
     FROM links INNER JOIN accesses ON access_id = accesses.id WHERE owner = ?
     ''',(owner,)).fetchall()
+def getTypes():
+    return cursor.execute('SELECT * FROM accesses').fetchall()
+def Types(arr):
+    types = []
+    for i in arr:
+        types.append({i[0], i[2]})
+    else:
+        types = [{1, "Публичный"}]
+    return types
