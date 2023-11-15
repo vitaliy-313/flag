@@ -35,17 +35,21 @@ cursor = connect.cursor()
 # "accesses"
 # ("id" INTEGER NOT NULL,
 # "level" INTEGER NOT NULL,
+# "rus" INTEGER NOT NULL,
 # primary key("id" AUTOINCREMENT))''')
 # connect.commit()
 #
-# links_types = [(1, 'public'), (2, 'all'), (3, 'privat')]
+# links_types = [(1, 'public', 'Публичный'), (2, 'all', 'Общий'), (3, 'privat', 'Приватный')]
 # acc = cursor.execute(''' SELECT * FROM accesses'''). fetchall()
 #
 # if (acc == []):
 #     for i in links_types:
-#         cursor.execute(''' INSERT INTO accesses('level') VALUES (?)''', (i[1], ))
+#
+#         cursor.execute(''' INSERT INTO accesses('level', 'rus') VALUES (?,?)''', (i[1],i[2] ))
 #         connect.commit()
 
+def getAccess():
+    return cursor.execute('''SELECT level FROM accesses ''').fetchall()
 def searchUserUrl(url, owner_id):
     return cursor.execute('''
     SELECT long

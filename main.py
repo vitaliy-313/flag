@@ -15,9 +15,10 @@ cursor = connect.cursor()
 
 @app.route('/', methods =['GET', 'POST'])
 def index():
-
+    err = ''
+    access = getAccess()
+    print(access)
     if request.method == 'POST':
-        err = ''
         url = request.form.get('url')
         access = request.form.get('access')
         short_url = request.form.get('short_url')
@@ -38,7 +39,7 @@ def index():
                 err = 'Эта ссылка сокращалась вами'
         else:
             err = 'Войдите, чтоб сокраить ссылку'
-    return render_template("index.html")
+    return render_template("index.html", err = err)
 
 @app.route('/login', methods =['GET', 'POST'])
 def log():

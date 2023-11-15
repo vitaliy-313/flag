@@ -37,14 +37,12 @@
         </div>
         <p>Тип доступа</p>
         <select name="access" id="">
-            <option value="access_public">Публичный</option>
-            <option value="access_all">Общего доступа</option>
-            <option value="access_privat">Приватный</option>
+            {% for item in access %}
+            <option value="access_public">item[3]</option>
+            {% endfor %}
         </select>
         <div class="btn">
-            {% for err in get_flashed_messages() %}
             <p>{{err}}</p>
-            {% endfor %}
             <button class="btn-short">Сократить</button>
         </div>
     </form>
