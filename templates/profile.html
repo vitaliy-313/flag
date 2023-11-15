@@ -41,19 +41,19 @@
       <td>{{i[2]}}</td>
       <td>{{i[3]}}</td>
       <td>
-         <form method="POST" action="edit_type">
+         <form method="POST" action="edit_access">
            <select name="type">
-             {% for t in types %}
-                        <option selected value="{{t[0]}}">{{t[2]}}</option>
+             {% for item in accesses %}
+                        <option selected value="{{item[0]}}">{{item[2]}}</option>
              {% endfor %}
            </select>
-          <button name="id" value={{i[4]}}>Ред</button>
+          <button name="id" value={{i[5]}}>Ред</button>
          </form>
 
       </td>
        <td>
          <form method="POST" action="edit_psev">
-          <input name="psev" value={{i[3].replace (request.host_url + 'link/', '') }} />
+          <input name="short_name" value={{i[3].replace (request.host_url + 'link/', '') }} />
           <button name="id" value={{i[4]}}>Ред</button>
          </form>
 

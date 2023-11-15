@@ -70,14 +70,41 @@ def reg():
     return render_template("reg.html")
 @app.route('/profile', methods =['GET', 'POST'])
 def profile():
-    typeArr = getTypes()
+    accesses = getAccess()
     links = getUserUrl(session['user_id'])
-    return render_template("profile.html", userUrl=links, types=Types(typeArr))
+    return render_template("profile.html", userUrl=links, accesses=accesses)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session.clear()
     return redirect("/")
+@app.route('/edit_access', methods=['POST', 'GET'])
+def edit_access():
+    if request.method == 'POST':
+        url_id = request.form['id']
+        type_id = request.form["type"]
+        editAccessUrl(type_id, url_id)
+        return redirect('/profile', code=302)
+@app.route('/edit_short_name', methods=['POST', 'GET'])
+def edit_short_name():
+    err = ''
+    if request.method == 'POST':
+        link_id = request.form.get('id')
+        short = request.form.get("short_name")
+        if short == '':
+            host_url = request.host_url
+            short_link = host_url + "link/" + ''.join(
+                choice(string.ascii_letters + string.digits) for _ in range(randint(8, 12)))
+            editShortUrl(short_link, link_id)
+
+            err = "Заполните псевдоним"
+        else:
+            new_link = request.host_url + "link/" + short
+            if getShortUrl(new_link) != None:
+                err = "Псевдоним для ссылки занят"
+            else:
+                editShortUrl(new_link, link_id)
+        return redirect('/profile', err = err)
 
 
 if __name__ == '__main__':

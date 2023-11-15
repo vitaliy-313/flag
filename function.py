@@ -86,12 +86,13 @@ def getUserUrl(owner):
     SELECT links.id, long, short, count, accesses.rus as type, access_id 
     FROM links INNER JOIN accesses ON access_id = accesses.id WHERE owner = ?
     ''',(owner,)).fetchall()
-def getTypes():
-    return cursor.execute('SELECT * FROM accesses').fetchall()
-def Types(arr):
-    types = []
-    for i in arr:
-        types.append({i[0], i[2]})
-    else:
-        types = [{1, "Публичный"}]
-    return types
+def editShortUrl(short, url_id):
+    cursor.execute('''
+    UPDATE links SET short = ? WHERE id = ?''',(short, url_id))
+def getShortUrl(short):
+    return cursor.execute('''
+    SELECT * FROM links WHERE short = ?
+    ''',(short,)).fetchall()
+def editAccessUrl(type_id, url_id):
+    cursor.execute('''
+    UPDATE links SET access_id = ? WHERE id = ?''',(type_id, url_id))
