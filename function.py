@@ -49,12 +49,13 @@ cursor = connect.cursor()
 #         connect.commit()
 
 def getAccess():
-    return cursor.execute('''SELECT level, rus FROM accesses ''').fetchall()
+    return cursor.execute('''SELECT id, level, rus FROM accesses ''').fetchall()
 def searchUserUrl(url, owner_id):
     return cursor.execute('''
     SELECT long
     FROM links
-    WHERE long = ? AND owner_id = ?''',(url, owner_id)).fetchall()
+        WHERE long = ? AND owner = ?
+    ''',(url, owner_id)).fetchone()
 def findUser(login):
     return cursor.execute("SELECT * FROM users where login = ? ", (login,)).fetchone()
 
@@ -76,13 +77,12 @@ def reg (login, password):
 
 def upUrl(url, short_url, access_id, owner_id, count = 0):
     cursor.execute('''INSERT INTO
-        links (long, short, access_id, count, owner_id)
-        VALUES (?,?,?,?,?)'''),(url, short_url, access_id, count, owner_id)
+        links(long, short, access_id, count, owner)
+        VALUES (?,?,?,?,?)''',(url, short_url, access_id, count, owner_id))
     connect.commit()
 
 def getUserUrl(owner):
-    cursor.execute('''
-    SELECT long, short, count
-    FROM links
-    WHERE owner = ?
+    return cursor.execute('''
+    SELECT links.id, long, short, count, accesses.rus as type, access_id 
+    FROM links INNER JOIN accesses ON access_id = accesses.id WHERE owner = ?
     ''',(owner,)).fetchall()

@@ -37,8 +37,8 @@
         </div>
         <p>Тип доступа</p>
         <select name="access" id="">
-            {% for item in access %}
-            <option value="access_public">item[3]</option>
+            {% for item in accesses %}
+            <option value= '{{item[0]}}'>{{item[2]}}</option>
             {% endfor %}
         </select>
         <div class="btn">

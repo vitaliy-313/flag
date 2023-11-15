@@ -16,30 +16,27 @@ cursor = connect.cursor()
 @app.route('/', methods =['GET', 'POST'])
 def index():
     err = ''
-    access = getAccess()
-    print(access)
+    accesses = getAccess()
     if request.method == 'POST':
         url = request.form.get('url')
         access = request.form.get('access')
         short_url = request.form.get('short_url')
         if url != None:
             if 'user_id' in session:
-                userUrl =  searchUserUrl(url, session['user_id'])
+                userUrl = searchUserUrl(url, session['user_id'])
                 print(searchUserUrl(url, session['user_id']))
-                if len(userUrl) == 0:
+                if userUrl == None:
                     if short_url:
                         upUrl(url,  short_url, access, session['user_id'])
                     else:
-                        err = 'Ссылка уже используется'
+                        userShortUrl = ''
+                        userShortUrl = hashlib.mb5(url.encode()).hexdigest()[:random.randint]
+                        upUrl(url,  userShortUrl, access, session['user_id'])
                 else:
-                    userShortUrl = ''
-                    userShortUrl = hashlib.mb5(url.encode()).hexdigest()[:random.randint]
-                    upUrl(url,  userShortUrl, access, session['user_id'])
+                    err = 'Эта ссылка сокращалась вами'
             else:
-                err = 'Эта ссылка сокращалась вами'
-        else:
-            err = 'Войдите, чтоб сокраить ссылку'
-    return render_template("index.html", err = err)
+                err = 'Войдите, чтоб сокраить ссылку'
+    return render_template("index.html", err = err, accesses = accesses)
 
 @app.route('/login', methods =['GET', 'POST'])
 def log():
@@ -73,8 +70,9 @@ def reg():
     return render_template("reg.html")
 @app.route('/profile', methods =['GET', 'POST'])
 def profile():
-    userUrl = getUserUrl(session['user_id'])
-    return render_template("profile.html", userUrl=userUrl)
+    links = getUserUrl(session['user_id'])
+    print(links)
+    return render_template("profile.html", userUrl=links)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():

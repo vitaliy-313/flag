@@ -23,9 +23,54 @@
     </nav>
 
     <div>
-        <% for i in userUrl %>
-            <p>{{i[0]}}</p>
-        <% endfor %>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Исходная ссылка</th>
+      <th>Короткая ссылка</th>
+      <th>Количество переходов</th>
+      <th>Тип</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+   {% for i in links %}
+     <tr>
+      <td class="max-250px">{{i[0]}}</td>
+      <td>{{i[3]}}</td>
+      <td>{{i[1]}}</td>
+      <td>
+         <form method="POST" action="edit_type">
+           <select name="type">
+             {% for t in types %}
+              {% if(t['id_type'] == i[5])%}
+                        <option selected value="{{t['id_type']}}">{{t['type']}}</option>
+                    {% else %}
+                 <option value="{{t['id_type']}}">{{t['type']}}</option>
+               {% endif %}
+             {% endfor %}
+           </select>
+          <button name="id" value={{i[4]}}>Ред</button>
+         </form>
+
+      </td>
+       <td>
+         <form method="POST" action="edit_psev">
+          <input name="psev" value={{i[3].replace (request.host_url + 'link/', '') }} />
+          <button name="id" value={{i[4]}}>Ред</button>
+         </form>
+
+       </td>
+      <td>
+        <form method="POST" action="del">
+          <button name="id" value={{i[4]}}>Удалить</button>
+        </form>
+      </td>
+    </tr>
+     {% endfor %}
+  </tbody>
+</table>
     </div>
 
 </body>
