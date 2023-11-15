@@ -51,55 +51,13 @@ def searchUserUrl(url, owner_id):
     SELECT long
     FROM links
     WHERE long = ? AND owner_id = ?''',(url, owner_id)).fetchall()
+def findUser(login):
+    return cursor.execute("SELECT * FROM users where login = ? ", (login,)).fetchone()
+
+
 def login (login, password):
-    user = cursor.execute("SELECT * FROM users where login = ? ",(login, )).fetchone()
-    hashpass = check_password_hash(user[2], password)
-
-    if user != None:
-        if hashpass:
-            session['user_id'] = user[0]
-
-            if 'all' in session and session['all'] != None:
-                if session['type'] == 'all':
-                    err = session['all'][1]
-                    href = cursor.execute(
-                    '''SELECT * FROM links INNER JOIN accesses ON accesses.id = links.accesses_id WHERE links.id = ?''',
-                    (session['all'][0],)).fetchone()
-                    cursor.execute('''UPDATE links SET count = ? WHERE id=?''', (href[5] + 1, href[0]))
-                    connect.commit()
-                    session['all']=None
-                    session['user_id'] = None
-                    connect.close()
-                    return redirect(f"{err}")
-                else:
-                    if session['all'][3] == session['user_id']:
-                        err = session['all'][1]
-                        href = cursor.execute(
-                        '''SELECT * FROM links INNER JOIN accesses ON accesses.id = links.accesses_id WHERE links.id = ?''',
-                        (session['all'][0],)).fetchone()
-                        cursor.execute('''UPDATE links SET count = ? WHERE id=?''', (href[5] + 1, href[0]))
-                        connect.commit()
-                        session['all'] = None
-                        session['user_id'] = None
-                        connect.commit()
-                        connect.close()
-                        return redirect(f"{err}")
-                    else:
-                        session['user_id'] = None
-                        session['all'] = None
-                        connect.close()
-                        return 'доступ закрыт'
-            else:
-                connect.close()
-                return redirect('/profile', code=302)
-        else:
-            flask.flash('пароль неверный')
-            connect.close()
-            return redirect('/login', code=302)
-    else:
-        flask.flash('аккаунта не существует')
-        connect.close()
-        return redirect('/login', code=302)
+    cursor.execute('''SELECT login, password
+    FROM users WHERE login = ? AND password =?''', (login,password)).fetchone()
 
 def reg (login, password):
     user_id = login

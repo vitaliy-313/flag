@@ -13,7 +13,7 @@
         <div class="navbar">
             <a href="/">Главная</a>
 
-            {% if session['user_id'] != none: %}
+            {% if session['auth'] == True: %}
             <a href="/profile">Профиль</a>
             <a href="/logout">Выйти</a>
 
@@ -31,6 +31,7 @@
         <p>Пароль</p>
         <input name="password" type="password">
         <div class="btn">
+            <p>{{err}}</p>
             {% for err in get_flashed_messages() %}
             <p>{{err}}</p>
             {% endfor %}

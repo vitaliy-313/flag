@@ -15,6 +15,7 @@ cursor = connect.cursor()
 
 @app.route('/', methods =['GET', 'POST'])
 def index():
+    print(session["auth"])
     if request.method == 'POST':
         err = ''
         url = request.form.get('url')
@@ -41,12 +42,21 @@ def index():
 
 @app.route('/login', methods =['GET', 'POST'])
 def log():
-
+    err=""
     if request.method == 'POST':
         loginUser = request.form.get('login')
         passw = request.form.get('password')
-        function.login(loginUser, passw)
-    return render_template("login.html")
+        user = findUser(loginUser)
+        if user != None:
+            if check_password_hash(user[2], passw):
+                session['user_id'] = user[0]
+                session['auth'] = True
+                return redirect('profile')
+            else:
+                err = 'Пароль не верный'
+        else:
+            err = 'Пользователь не найден'
+    return render_template("login.html", err=err)
 
 @app.route('/reg', methods =['GET', 'POST'])
 def reg():

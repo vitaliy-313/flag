@@ -15,7 +15,7 @@
         <div class="navbar">
             <a href="/">Главная</a>
 
-            {% if session['user_id'] != none: %}
+            {% if session['auth'] == True: %}
             <a href="/profile">Профиль</a>
             <a href="/logout">Выйти</a>
 
