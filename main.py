@@ -4,6 +4,7 @@ import flask
 from flask import Flask, render_template, request, session, redirect
 import os
 import hashlib, random
+from random import randint, choice
 import function
 from function import *
 
@@ -72,7 +73,9 @@ def reg():
 def profile():
     accesses = getAccess()
     links = getUserUrl(session['user_id'])
-    return render_template("profile.html", userUrl=links, accesses=accesses)
+    hosthref = request.host_url
+    print(hosthref)
+    return render_template("profile.html", userUrl=links, accesses=accesses,hosthref=hosthref)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
@@ -84,7 +87,15 @@ def edit_access():
         url_id = request.form['id']
         type_id = request.form["type"]
         editAccessUrl(type_id, url_id)
-        return redirect('/profile', code=302)
+        return redirect('/profile')
+
+@app.route('/delete', methods=['POST', 'GET'])
+def delete():
+    if request.method == 'POST':
+        url_id = request.form['id']
+        print(url_id)
+        editDelete(url_id)
+        return redirect('/profile')
 @app.route('/edit_short_name', methods=['POST', 'GET'])
 def edit_short_name():
     err = ''

@@ -34,11 +34,12 @@
       <th></th>
     </tr>
   </thead>
+    <p>{{userUrl}}</p>
   <tbody>
    {% for i in userUrl %}
      <tr>
       <td class="max-250px">{{i[1]}}</td>
-      <td>{{i[2]}}</td>
+      <td><a href={{hosthref}}short/{{i[2]}}>{{hosthref}}short/{{i[2]}}</a></td>
       <td>{{i[3]}}</td>
       <td>
          <form method="POST" action="edit_access">
@@ -47,20 +48,20 @@
                         <option selected value="{{item[0]}}">{{item[2]}}</option>
              {% endfor %}
            </select>
-          <button name="id" value={{i[5]}}>Ред</button>
+          <button name="id" value={{i[0]}}>Ред</button>
          </form>
 
       </td>
        <td>
          <form method="POST" action="edit_psev">
-          <input name="short_name" value={{i[3].replace (request.host_url + 'link/', '') }} />
-          <button name="id" value={{i[4]}}>Ред</button>
+          <input name="short_name" value={{i[2]}} />
+          <button name="id" value={{i[0]}}>Ред</button>
          </form>
 
        </td>
       <td>
-        <form method="POST" action="del">
-          <button name="id" value={{i[4]}}>Удалить</button>
+        <form method="POST" action="delete">
+          <button name="id" value={{i[0]}}>Удалить</button>
         </form>
       </td>
     </tr>

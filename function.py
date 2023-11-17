@@ -88,11 +88,23 @@ def getUserUrl(owner):
     ''',(owner,)).fetchall()
 def editShortUrl(short, url_id):
     cursor.execute('''
-    UPDATE links SET short = ? WHERE id = ?''',(short, url_id))
+    UPDATE links SET short = ?
+    WHERE id = ?''',(short, url_id))
+    connect.commit()
 def getShortUrl(short):
     return cursor.execute('''
-    SELECT * FROM links WHERE short = ?
+    SELECT * FROM links
+    WHERE short = ?
     ''',(short,)).fetchall()
 def editAccessUrl(type_id, url_id):
     cursor.execute('''
-    UPDATE links SET access_id = ? WHERE id = ?''',(type_id, url_id))
+    UPDATE links
+    SET access_id = ?
+    WHERE id = ?''',(type_id, url_id))
+    connect.commit()
+
+def editDelete(url_id):
+    cursor.execute('''
+    DELETE FROM links
+    WHERE id = ?;''',(url_id,))
+    connect.commit()
