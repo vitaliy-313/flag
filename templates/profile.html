@@ -23,6 +23,7 @@
     </nav>
 
     <div>
+        {{session['err']}}
 <table class="table">
   <thead>
     <tr>
@@ -34,7 +35,7 @@
       <th></th>
     </tr>
   </thead>
-    <p>{{userUrl}}</p>
+
   <tbody>
    {% for i in userUrl %}
      <tr>
@@ -42,6 +43,9 @@
       <td><a href={{hosthref}}short/{{i[2]}}>{{hosthref}}short/{{i[2]}}</a></td>
       <td>{{i[3]}}</td>
       <td>
+          <p>
+             {{i[4]}}
+          </p>
          <form method="POST" action="edit_access">
            <select name="type">
              {% for item in accesses %}
@@ -53,7 +57,7 @@
 
       </td>
        <td>
-         <form method="POST" action="edit_psev">
+         <form method="POST" action="edit_short_name">
           <input name="short_name" value={{i[2]}} />
           <button name="id" value={{i[0]}}>Ред</button>
          </form>
