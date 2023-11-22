@@ -37,14 +37,27 @@
         </div>
         <p>Тип доступа</p>
         <select name="access" id="">
+            {% if session['auth'] == True: %}
+
             {% for item in accesses %}
             <option value= '{{item[0]}}'>{{item[2]}}</option>
             {% endfor %}
+
+            {% else: %}
+
+
+                    <option value= '{{accesses[1][0]}}'>{{accesses[1][2]}}</option>
+
+
+            {% endif %}
         </select>
+        <a href={{vision_url}}>{{vision_url}}</a>
         <div class="btn">
             <p>{{err}}</p>
+
             <button class="btn-short">Сократить</button>
         </div>
+
     </form>
 
 </body>

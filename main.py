@@ -18,26 +18,41 @@ cursor = connect.cursor()
 @app.route('/', methods =['GET', 'POST'])
 def index():
     err = ''
+    vision_url=''
     accesses = getAccess()
     if request.method == 'POST':
         url = request.form.get('url')
         access = request.form.get('access')
         short_url = request.form.get('short_url')
-        if url != None:
-            if 'user_id' in session:
-                userUrl = searchUserUrl(url, session['user_id'])
-                if userUrl == None:
-                    if short_url:
-                        upUrl(url,  short_url, access, session['user_id'])
+        hosthref = request.host_url
+        getUrl = getLong(url)
+        print(getUrl)
+        if url != '':
+            if getUrl == None:
+                if 'user_id' in session:
+                    userUrl = searchUserUrl(url, session['user_id'])
+                    if userUrl == None:
+                        if short_url:
+                            upUrl(url,  short_url, access, session['user_id'])
+                        else:
+                            userShortUrl = ''
+                            userShortUrl = hashlib.md5(url.encode()).hexdigest()[:random.randint(8,12)]
+                            upUrl(url,  userShortUrl, access, session['user_id'])
                     else:
-                        userShortUrl = ''
-                        userShortUrl = hashlib.mb5(url.encode()).hexdigest()[:random.randint]
-                        upUrl(url,  userShortUrl, access, session['user_id'])
+                        err = 'Эта ссылка сокращалась вами'
                 else:
-                    err = 'Эта ссылка сокращалась вами'
+                    if short_url:
+                        upUrlAll(url, short_url, access)
+                        vision_url = hosthref + 'short/' + short_url
+                    else:
+                        userShortUrl = hashlib.md5(url.encode()).hexdigest()[:random.randint(8,12)]
+                        upUrlAll(url, userShortUrl, access)
+                        vision_url = hosthref + 'short/' + userShortUrl
             else:
-                err = 'Войдите, чтоб сокраить ссылку'
-    return render_template("index.html", err = err, accesses = accesses)
+                err ='Такая существует'
+        else:
+            err = 'ссылки нет'
+    return render_template("index.html", err = err, accesses = accesses, vision_url = vision_url)
 
 @app.route('/login', methods =['GET', 'POST'])
 def log():
@@ -101,11 +116,9 @@ def edit_short_name():
         link_id = request.form.get('id')
         short = request.form.get("short_name")
         if short == '':
-            short_link =''.join(
-                choice(string.ascii_letters + string.digits) for _ in range(randint(8, 12)))
+            short_link = hashlib.md5(short.encode()).hexdigest()[:random.randint(8,12)]
             editShortUrl(short_link, link_id)
         else:
-
             if getShortUrl(short) != []:
                 session['err'] = "Псевдоним для ссылки занят"
             else:

@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS
 "short" TEXT,
 "access_id" INTEGER NOT NULL,
 "count" INTEGER NOT NULL,
-"owner" INTEGER NOT NULL,
+"owner" INTEGER,
 primary key("id" AUTOINCREMENT),
 FOREIGN KEY("owner") REFERENCES "users"("id"),
 FOREIGN KEY("access_id") REFERENCES "accesses"("id"))''')
@@ -49,6 +49,11 @@ if (acc == []):
 
 def getAccess():
     return cursor.execute('''SELECT id, level, rus FROM accesses ''').fetchall()
+def getLong(long):
+    return cursor.execute('''
+    SELECT * FROM links
+    WHERE long = ?
+    ''',(long,)).fetchone()
 def searchUserUrl(url, owner_id):
     return cursor.execute('''
     SELECT long
@@ -79,7 +84,12 @@ def upUrl(url, short_url, access_id, owner_id, count = 0):
         links(long, short, access_id, count, owner)
         VALUES (?,?,?,?,?)''',(url, short_url, access_id, count, owner_id))
     connect.commit()
-
+def upUrlAll(url, short_url, access_id , count = 0):
+    print(url, short_url, access_id, count)
+    cursor.execute('''INSERT INTO
+        links(long, short, access_id, count)
+        VALUES (?,?,?,?)''',(url, short_url, access_id, count))
+    connect.commit()
 def getUserUrl(owner):
     return cursor.execute('''
     SELECT links.id, long, short, count, accesses.rus as type, access_id 
