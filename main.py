@@ -33,10 +33,12 @@ def index():
                     userUrl = searchUserUrl(url, session['user_id'])
                     if userUrl == None:
                         if short_url:
+                            vision_url = hosthref + 'short/' + short_url
                             upUrl(url,  short_url, access, session['user_id'])
                         else:
                             userShortUrl = ''
                             userShortUrl = hashlib.md5(url.encode()).hexdigest()[:random.randint(8,12)]
+                            vision_url = hosthref + 'short/' + userShortUrl
                             upUrl(url,  userShortUrl, access, session['user_id'])
                     else:
                         err = 'Эта ссылка сокращалась вами'
